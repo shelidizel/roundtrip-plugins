@@ -66,6 +66,8 @@ include_once BABE_PLUGIN_DIR . '/includes/class-babe-pay-cash.php';
 
 include_once BABE_PLUGIN_DIR . '/includes/class-babe-pay-coupon.php';
 
+include_once BABE_PLUGIN_DIR . '/includes/class-babe-pay-stripe.php';
+
 include_once BABE_PLUGIN_DIR . '/includes/class-babe-users.php';
 
 include_once BABE_PLUGIN_DIR . '/includes/class-babe-my-account.php';

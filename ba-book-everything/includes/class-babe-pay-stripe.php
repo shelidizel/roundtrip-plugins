@@ -12,16 +12,31 @@ if ( ! defined( 'ABSPATH' ) ) {
  * @author 		Booking Algorithms
  */
 
-class BABE_Pay_cash {
+class BABE_Pay_stripe {
     
     // payment method name
-    private static $payment_method = 'Stripe';
+    private static $payment_method = 'stripe';
+
+
+    
     
 //////////////////////////////
     /**
 	 * Hook in tabs.
 	 */
     public static function init() {
+
+      require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';;
+      define('STRIPE_SECRET_KEY', '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');
+
+      function stripe_payments_scripts() {
+         wp_enqueue_script( 'stripe-checkout-js', 'https://js.stripe.com/v3/', [], '3.0', true );
+         wp_enqueue_script( 'checkout-js', plugin_dir_url( __FILE__ ) . './js/checkout.js', array( 'stripe-checkout-js' ), '1.0', true );
+         wp_enqueue_style(  'checkout-css', plugin_dir_url( __FILE__ ) . './css/checkout.css', array(), '1.0' );
+       }
+       add_action( 'wp_enqueue_scripts', 'stripe_payments_scripts' );
+
+
         
         add_filter('babe_checkout_payment_title_'.self::$payment_method, array( __CLASS__, 'payment_method_title'), 10, 3);
         
@@ -66,12 +81,21 @@ class BABE_Pay_cash {
      * @param string $input_fields_name
      * @return string
 	 */
-     public static function payment_method_fields_html($fields, $args, $input_fields_name){
-        
-        $fields .= __( 'Book now, pay later!', 'ba-book-everything' );
-        
-        return $fields;
-     }
+   public static function payment_method_fields_html($stripe_form_html) {
+      $stripe_form_html = '
+        <form id="payment-form">
+          <div id="payment-element">
+            </div>
+          <button id="submit">
+            <div class="spinner hidden" id="spinner"></div>
+            <span id="button-text">Pay now</span>
+          </button>
+          <div id="payment-message" class="hidden"></div>
+        </form>
+      ';
+    
+      return $stripe_form_html;
+    }
      
 ////////////////////////
      /**
@@ -94,4 +118,4 @@ class BABE_Pay_cash {
 ////////////////////    
 }
 
-BABE_Pay_cash::init(); 
+BABE_Pay_stripe::init(); 

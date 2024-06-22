@@ -86,12 +86,18 @@ class BABE_Payments {
         } else {
 
             $payment_method = get_post_meta($order_id, '_payment_method', true);
-            if ( empty($payment_method) || 'coupon' === $payment_method ){
+            if ( empty($payment_method) || 'coupon' === $payment_method  || 'stripe' === $payment_method  ){
                 $payment_methods_arr = BABE_Settings::get_active_payment_methods();
                 update_post_meta($order_id, '_payment_method', key($payment_methods_arr) );
+
+                add_filter( 'babe_get_active_payment_methods', array( 'BABE_Payments', 'remove_coupon_payment_method'), 10 );
+            } else if ( empty($payment_method) || 'coupon' === $payment_method || 'cash' === $payment_method ) {
+
+                add_filter( 'babe_get_active_payment_methods', array( 'BABE_Payments', 'switch_to_stripe_payment_method'), 10 );
+
             }
 
-            add_filter( 'babe_get_active_payment_methods', array( 'BABE_Payments', 'remove_coupon_payment_method'), 10 );
+            
         }
 
     }
@@ -100,6 +106,13 @@ class BABE_Payments {
     {
         return [
             'coupon' => __('Pay by Coupon', 'ba-book-everything'),
+        ];
+    }
+
+    public static function switch_to_stripe_payment_method( $payment_methods_arr )
+    {
+        return [
+            'stripe' => __('Pay With Stripe', 'ba-book-everything'),
         ];
     }
 
@@ -151,10 +164,18 @@ class BABE_Payments {
      * @return array
 	 */
      public static function init_payment_methods_array(){
+
+        $payment_methods_arr = array('cash', 'stripe');
+        $payment_methods_arr_val = array('Pay Later', 'Pay With Stripe');
         
-        self::$payment_methods['cash'] = __('Pay later', 'ba-book-everything');
         
-        do_action( 'babe_payment_methods_init', self::$payment_methods);
+        foreach ($payment_methods_arr as $method) {
+
+            self::$payment_methods[$method] =  __($method === 'cash' ? $payment_methods_arr_val[0] : $payment_methods_arr_val[1], 'ba-book-everything');
+        
+            do_action( 'babe_payment_methods_init', self::$payment_methods);
+            
+          }
         
         return self::$payment_methods;
         

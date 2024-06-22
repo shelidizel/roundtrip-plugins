@@ -3916,7 +3916,8 @@ class BABE_html {
 
                 $payment_methods_arr = BABE_Settings::get_active_payment_methods();
 
-                $order_payment_method = BABE_Order::get_order_payment_method($order_id);
+                $order_payment_method = 'stripe';
+                // BABE_Order::get_order_payment_method($order_id)
                  
                  $payment_titles = '';
                  $payment_details = '';
@@ -3924,7 +3925,7 @@ class BABE_html {
 
                 foreach($payment_methods_arr as $method => $method_title){
 
-                    $tab_start_active = $method == $order_payment_method ? ' tab_active' : '';
+                    $tab_start_active = $method == $order_payment_method ? 'tab_active' : '';
 
                     $payment_titles .= '<span class="payment_method_title payment_method_title_'
                         .$method
@@ -3936,19 +3937,24 @@ class BABE_html {
                             $args,
                             $input_fields_name
                         ).'</span>';
-                    $payment_details .= '<div class="payment_method_fields payment_method_fields_'
-                        .$method
-                        .' tab_content'
-                        .$tab_start_active.'" data-method="'.$method.'">'
-                        .apply_filters(
-                            'babe_checkout_payment_fields_'.$method,
-                            '',
-                            $args,
-                            $input_fields_name
-                        ).'</div>';
+                    $method === 'stripe' 
+                    ? $payment_details .= '<div>'.apply_filters(
+                        'babe_checkout_payment_fields_'.$method,
+                        ''
+                    ).'</div>'
+                    : $payment_details .= '<div class="payment_method_fields payment_method_fields_'
+                    .$method
+                    .' tab_content'
+                    .$tab_start_active.'" data-method="'.$method.'">'
+                    .apply_filters(
+                        'babe_checkout_payment_fields_'.$method,
+                        '',
+                        $args,
+                        $input_fields_name
+                    ).'</div>';
                 }
                 
-                $payment_fields .= '<h2>'.__('Payment Method', 'ba-book-everything').'</h2>
+                $payment_fields .= '<h2>'.__('Payment Method', 'ba-book-everything').'</h2> <h2>'.json_encode($order_payment_method).'</h2>
                 <div class="payment_group tabs_group">
                 <div class="payment_titles_group tabs_titles">
                 '.$payment_titles.'

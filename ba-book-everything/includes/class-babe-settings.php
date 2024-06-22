@@ -129,7 +129,7 @@ class BABE_Settings {
             'disable_guest_bookings' => 0,
             'order_availability_confirm' => 'auto',
             'order_payment_processing_waiting' => 30,
-            'payment_methods' => array( 0 => 'cash'),
+            'payment_methods' => array( 0  => 'cash', 1 => 'stripe'),
             'currency_place' => 'left',
             'currency' => 'USD',
             'base_country' => 'US',
