@@ -3881,6 +3881,8 @@ class BABE_html {
         $output .= self::order_items($order_id);
         
         $output = apply_filters('babe_checkout_after_order_items', $output, $args);
+
+        
             
             ///////// fields
             

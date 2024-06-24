@@ -31,10 +31,12 @@ class BABE_Pay_stripe {
 
       function stripe_payments_scripts() {
          wp_enqueue_script( 'stripe-checkout-js', 'https://js.stripe.com/v3/', [], '3.0', true );
-         wp_enqueue_script( 'checkout-js', plugin_dir_url( __FILE__ ) . './js/checkout.js', array( 'stripe-checkout-js' ), '1.0', true );
-         wp_enqueue_style(  'checkout-css', plugin_dir_url( __FILE__ ) . './css/checkout.css', array(), '1.0' );
+         wp_enqueue_script( 'checkout-js', 'http://localhost/roundtrips/wp-content/plugins/ba-book-everything/js/checkout.js', array( 'stripe-checkout-js' ), '1.0', true );
+         wp_enqueue_style(  'checkout-css',  'http://localhost/roundtrips/wp-content/plugins/ba-book-everything/css/checkout.css', array(), '1.0' );
        }
        add_action( 'wp_enqueue_scripts', 'stripe_payments_scripts' );
+
+       
 
 
         
@@ -83,7 +85,6 @@ class BABE_Pay_stripe {
 	 */
    public static function payment_method_fields_html($stripe_form_html) {
       $stripe_form_html = '
-        <form id="payment-form">
           <div id="payment-element">
             </div>
           <button id="submit">
@@ -91,11 +92,16 @@ class BABE_Pay_stripe {
             <span id="button-text">Pay now</span>
           </button>
           <div id="payment-message" class="hidden"></div>
-        </form>
       ';
     
       return $stripe_form_html;
     }
+
+    
+    public static function get_amount_to_pay($stripe_order_data){
+
+      return wp_localize_script( 'checkout-js', 'pluginData', $stripe_order_data );
+   }
      
 ////////////////////////
      /**

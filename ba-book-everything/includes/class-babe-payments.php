@@ -60,6 +60,14 @@ class BABE_Payments {
 
         $order_id = absint($args['order_id']);
 
+        function localize_script_variables($order_id) {
+            $my_variable = BABE_Order::get_order_total_amount($order_id);
+            wp_localize_script( 'checkout-js', 'php_vars', array( 'my_variable' => $my_variable ) );
+        }
+        add_action( 'wp_enqueue_scripts', function() use ($order_id) {
+            localize_script_variables($order_id);
+          });
+
         if (
             $args['current_action'] !== 'to_checkout'
             || !BABE_Order::is_order_valid($order_id, $args['order_num'], $args['order_hash'])

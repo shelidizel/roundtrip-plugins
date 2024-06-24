@@ -704,6 +704,7 @@ class BABE_Order {
 
         return get_post_meta($order_id, '_payment_method', true);
      }
+
      
 ////////////////////////
      /**
@@ -2193,6 +2194,8 @@ class BABE_Order {
         $args['order_currency'] = $order_meta['_order_currency'];
         
         $order_status = $order_meta['_status'];
+
+        
         
         /// clear order meta
         $order_meta = self::clear_order_meta($order_meta);
