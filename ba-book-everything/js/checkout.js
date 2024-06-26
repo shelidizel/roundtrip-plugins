@@ -4,11 +4,9 @@
 const stripe = Stripe("pk_live_51OyyrRP1EsANvFjocizTvQIFZWb1cothszDmvqUPdddXs0zBtW0M4nuC9YaitSRzHQ0TX5NvBm6xrZedxkzZ7R8j006uVyHnmP");
 
 // The items the customer wants to buy
-const items = [{ id: "xl-tshirt" }];
+const items = [{ amount: php_vars.my_variable }];
 
 let elements;
-
-console.log(php_vars.my_variable);
 
 
 initialize();
@@ -21,6 +19,8 @@ document
 
 // Fetches a payment intent and captures the client secret
 async function initialize() { 
+
+    setLoading(true);
   
     console.log('+++++++++++++++');
     console.log(JSON.stringify({ items }));
@@ -40,8 +40,13 @@ async function initialize() {
         throw new Error(`Error fetching payment intent: ${response.statusText}`);
       }
 
+      setLoading(false);
+
   
       const data = await response.json();
+
+      console.log('++++');
+      console.log(data);
       const { clientSecret } = data;
   
       elements = stripe.elements({ clientSecret });

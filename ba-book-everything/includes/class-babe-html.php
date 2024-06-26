@@ -2425,7 +2425,7 @@ class BABE_html {
 
         } elseif ( empty($av_cal) ){
 
-            $output = '';
+            $output = 'Step';
         }
 
         $output = apply_filters(

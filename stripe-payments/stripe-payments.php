@@ -15,10 +15,12 @@ Version: 1.0
 function my_custom_endpoint_callback($request) {
 	$data = $request->get_json_params();
 
+  $amount = $data -> amount;
+
   $stripe = new \Stripe\StripeClient(STRIPE_SECRET_KEY);
 
   $paymentIntent = $stripe->paymentIntents->create([
-    'amount' => 60,
+    'amount' => $amount,
     'currency' => 'usd',
     // In the latest version of the API, specifying the `automatic_payment_methods` parameter is optional because Stripe enables its functionality by default.
     'automatic_payment_methods' => [

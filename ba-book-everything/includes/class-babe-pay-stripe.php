@@ -29,12 +29,7 @@ class BABE_Pay_stripe {
       require_once plugin_dir_path(__FILE__) . 'vendor/autoload.php';;
       define('STRIPE_SECRET_KEY', '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');
 
-      function stripe_payments_scripts() {
-         wp_enqueue_script( 'stripe-checkout-js', 'https://js.stripe.com/v3/', [], '3.0', true );
-         wp_enqueue_script( 'checkout-js', 'http://localhost/roundtrips/wp-content/plugins/ba-book-everything/js/checkout.js', array( 'stripe-checkout-js' ), '1.0', true );
-         wp_enqueue_style(  'checkout-css',  'http://localhost/roundtrips/wp-content/plugins/ba-book-everything/css/checkout.css', array(), '1.0' );
-       }
-       add_action( 'wp_enqueue_scripts', 'stripe_payments_scripts' );
+      
 
        
 
